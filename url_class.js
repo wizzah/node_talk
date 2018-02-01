@@ -6,11 +6,6 @@ module.exports = class Url {
         this.shortenedUrl = shortenedUrl
     }
 
-    // Get shortened url from the DB
-    get_shortened_url() {
-        return this.db.collection("shortener").find({ url: this.url })
-    }
-
     // Get URL from the DB
     get_url(callback) {
         const collection = this.db.collection("shortener")
@@ -48,10 +43,5 @@ module.exports = class Url {
                     callback([newDoc])
                 }
             })
-    }
-
-    // Generate random numbers and letters
-    generate_rand_chars() {
-        return Math.random().toString(36).subst(2,5)
     }
 }
