@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <title>Node Demo!</title>
+</head>
+<body>
+
+  <form id="myForm" name="myForm">
+      <div>
+        <label for="url">Shorten URL:</label>
+        <input type="text" id="url" name="url">
+    </div>
+    <input type="submit" value="Shorten!" id="submit">
+</form>
+<span id="result"> </span>
+<script>
+let el = document.getElementById("myForm");
+
+document.getElementById("submit").addEventListener("click", function(e){
+
+  e.preventDefault()
+  let formData = new FormData(el);
+  let obj = {
+    "url" : formData.get("url")
+  }
+  fetch('http://localhost:3000/api/url', {
+      method: 'POST',
+      body: JSON.stringify(obj),
+      headers: new Headers({ 'Content-Type': 'application/json' })
+  })
+.then(response => response.json())
+.catch(error => console.error('Error:', error))
+.then(function(response) {
+    console.log(response)
+    document.getElementById("result").textContent = response[0].shortenedUrl;
+})
+
+}, false);
+</script>
+</body>
+</html>
