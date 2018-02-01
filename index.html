@@ -33,7 +33,7 @@ document.getElementById("submit").addEventListener("click", function(e){
 .catch(error => console.error('Error:', error))
 .then(function(response) {
     console.log(response)
-    document.getElementById("result").textContent = window.location.href + response[0].shortenedUrl;
+    document.getElementById("result").textContent = window.location.href + response.shortenedUrl;
 })
 
 }, false);

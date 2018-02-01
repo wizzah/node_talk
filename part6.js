@@ -37,7 +37,7 @@ app.get('/r/:urlId', function (req, res) {
 
     checkUrl.get_url((results) => {
         if(results) {
-            res.redirect(results[0].url)
+            res.redirect(results.url)
         } else {
             // Redirect to the landing page
             res.redirect('/')

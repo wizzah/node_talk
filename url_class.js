@@ -14,7 +14,7 @@ module.exports = class Url {
                 if (err) { return }
 
                 if (item) {
-                    callback([item])
+                    callback(item)
                 } else {
                     callback()
                 }
@@ -31,7 +31,7 @@ module.exports = class Url {
 
                 // if we have an item, send that back
                 if (item) {
-                    callback([item])
+                    callback(item)
                 } else {
                     let random_string = Math.random().toString(36).substr(2,5)
                     // otherwise create a new one
@@ -40,7 +40,7 @@ module.exports = class Url {
                         shortenedUrl: "r/" + random_string
                     } 
                     collection.insert(newDoc)
-                    callback([newDoc])
+                    callback(newDoc)
                 }
             })
     }
