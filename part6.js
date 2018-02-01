@@ -21,48 +21,26 @@ app.get('/', function (req, res) {
 
 // We'll do processing here
 app.post('/api/url', function (req, res) {
-    let newUrl = new url(req.body.url, dbo, undefined)
-    // newUrl.get_or_create_url().toArray((err, results) => {
-    //     console.log(results)
-    //     res.send(results)
-    // })
-    let response
 
-    // Check if it's already in the db
-    // newUrl.get_url().toArray((err, results) => {
-    //     if(results.length > 0) {
-    //         response = results
-    //     }
-    // })
-    response = newUrl.get_url()
+    let newUrl = new url(req.body.url, dbo)
 
-    // Otherwise, add it
-    if(!response) {
-        newUrl.create_shortened_url().toArray((err, results) => {
-            console.log(results, "adding")
-            // response = results
-        })
-        console.log("not response")
-        // newUrl.create_shortened_url()
-        console.log("after create create_shortened_url")
-        newUrl.get_url().toArray((err, results) => {
-            console.log(results)
-            response = results
-        })
-    }
-    res.send(response)
+    newUrl.get_or_create((results) => {
+        res.send(results);
+    });
 })
 
 // The redirection, moving the user to the 
 // longer version of the URL
-app.get('/:urlId', function (req, res) {
+app.get('/r/:urlId', function (req, res) {
 
-    let checkUrl = new url(undefined, dbo, req.params.urlId)
-    let results = checkUrl.get_url()
-    if(results) {
-        res.redirect(results[0].url)
-    } else {
-        // Redirect to the landing page
-        res.redirect('/')
-    }
+    let checkUrl = new url(undefined, dbo, "r/" + req.params.urlId)
+
+    checkUrl.get_url((results) => {
+        if(results) {
+            res.redirect(results[0].url)
+        } else {
+            // Redirect to the landing page
+            res.redirect('/')
+        }
+    })
 })

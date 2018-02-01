@@ -1,8 +1,8 @@
 module.exports = class Url {
 
     constructor(url, db, shortenedUrl) {
-        this.url = url;
-        this.db = db;
+        this.url = url
+        this.db = db
         this.shortenedUrl = shortenedUrl
     }
 
@@ -12,33 +12,46 @@ module.exports = class Url {
     }
 
     // Get URL from the DB
-    get_url() {
-        // return this.db.collection("shortener").find({ shortenedUrl: this.shortenedUrl })
-        this.db.collection("shortener").find({ shortenedUrl: this.shortenedUrl }).toArray(function(err, result) {
-            console.log("result from get_url", result)
-            return result
-        })
+    get_url(callback) {
+        const collection = this.db.collection("shortener")
+        collection
+            .findOne({ shortenedUrl: this.shortenedUrl }, (err, item) => {
+                if (err) { return }
+
+                if (item) {
+                    callback([item])
+                } else {
+                    callback()
+                }
+            })
     }
 
     // Get or create URL
-    get_or_create_url() {
-        // If the URL doesn't exist
-        if(this.get_shortened_url().length < 1) {
-            // Generate a new url, add to db
-            let newDoc = { url: this.url, shortenedUrl: "exmpl" }
-            this.db.collection("shortener").insertOne(newDoc, function(err, res) {
-                console.log("inserted", res)
+    get_or_create(callback) {
+        const collection = this.db.collection("shortener")
+
+        collection
+            .findOne({ url: this.url }, (err, item) => {
+                if (err) { return }
+
+                // if we have an item, send that back
+                if (item) {
+                    callback([item])
+                } else {
+                    let random_string = Math.random().toString(36).substr(2,5)
+                    // otherwise create a new one
+                    const newDoc = {
+                        url: this.url,
+                        shortenedUrl: "r/" + random_string
+                    } 
+                    collection.insert(newDoc)
+                    callback([newDoc])
+                }
             })
-        }
-        return this.get_shortened_url()
     }
 
-    // Create new shortened url
-    create_shortened_url() {
-        let newDoc = { url: this.url, shortenedUrl: "exmpl" }
-        this.db.collection("shortener").insertOne(newDoc, function(err, res) {
-            console.log("inserted", res.ops[0].shortenedUrl)
-            return res.ops[0].shortenedUrl
-        })
+    // Generate random numbers and letters
+    generate_rand_chars() {
+        return Math.random().toString(36).subst(2,5)
     }
 }
