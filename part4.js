@@ -1,7 +1,7 @@
 const express = require('express')
 const app = express()
 const url = require('./url_class')
-const MongoClient = require('mongodb').MongoClient;
+const MongoClient = require('mongodb').MongoClient
 
 let dbo
 
@@ -13,7 +13,7 @@ MongoClient.connect('mongodb://localhost:27017/', function(err, db) {
     // make sure that it inserts the document into the collection
     dbo.collection("shortener").insertOne(newDoc)
     dbo.collection("shortener").find({ url: "https://www.google.com" }).toArray(function(err, result) {
-        if(err) throw err;
+        if(err) throw err
         console.log(result)
     })
 
@@ -32,6 +32,6 @@ app.post('/api/url', function (req, res) {
 
 // The redirection, moving the user to the 
 // longer version of the URL
-app.get('/:urlId', function (req, res) {
+app.get('/r/:urlId', function (req, res) {
 
 })
